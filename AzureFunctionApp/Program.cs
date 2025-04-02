@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 
 namespace AzureFunctionApp
 {
-    class Program
+    class Program   //this is for testing my function implementation locally
     {
         static async Task Main(string[] args)
         {
