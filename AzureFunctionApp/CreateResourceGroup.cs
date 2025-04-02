@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +12,7 @@ using Microsoft.Azure.Management.ResourceManager.Models;
 using Microsoft.Rest.Azure.Authentication;
 using Microsoft.Rest;
 
-namespace ResourceGroupCreator
+namespace AzureFunctionApp
 {
     public static class CreateResourceGroup
     {
@@ -42,32 +42,32 @@ namespace ResourceGroupCreator
                 // Get the managed identity token
                 var azureServiceTokenProvider = new Microsoft.Azure.Services.AppAuthentication.AzureServiceTokenProvider();
                 string accessToken = await azureServiceTokenProvider.GetAccessTokenAsync("https://management.azure.com/");
-                
+
                 // Create credentials using the token
                 var tokenCredentials = new TokenCredentials(accessToken);
-                
+
                 // Create ResourceManagementClient with token credentials
                 var resourceManagementClient = new ResourceManagementClient(tokenCredentials)
                 {
                     SubscriptionId = Environment.GetEnvironmentVariable("SUBSCRIPTION_ID")
                 };
-                
+
                 // Check if resource group exists
                 var exists = await resourceManagementClient.ResourceGroups.CheckExistenceAsync(resourceGroupName);
-                
+
                 if (exists)
                 {
                     log.LogInformation($"Resource group {resourceGroupName} already exists.");
                     return new OkObjectResult($"Resource group {resourceGroupName} already exists in {location}");
                 }
-                
+
                 // Create resource group
                 var resourceGroup = await resourceManagementClient.ResourceGroups.CreateOrUpdateAsync(
                     resourceGroupName,
                     new ResourceGroup(location));
-                
+
                 log.LogInformation($"Created resource group {resourceGroupName} in {location}");
-                
+
                 // Return success
                 return new OkObjectResult($"Successfully created resource group {resourceGroupName} in {location}");
             }
