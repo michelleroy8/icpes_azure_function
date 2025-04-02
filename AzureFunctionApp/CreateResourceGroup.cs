@@ -14,7 +14,7 @@ using Microsoft.Rest;
 
 namespace AzureFunctionApp
 {
-    public static class CreateResourceGroup
+    public static class CreateResourceGroup   //this is a function implementation when evoked this creates a resource group, this picks the resouce group name and location from POST API request body
     {
         [FunctionName("CreateResourceGroup")]
         public static async Task<IActionResult> Run(
